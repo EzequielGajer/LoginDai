@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { login } from '../utils/api';
+import { login } from '../../utils/api';
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('pablo.ulman@ort.edu.ar');

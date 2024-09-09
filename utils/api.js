@@ -1,7 +1,6 @@
 import axios from 'axios';
-
 const api = axios.create({
-  baseURL: 'https://starling-apt-openly.ngrok-free.app/api/user',
+  baseURL: 'https://famous-abnormally-calf.ngrok-free.app/api/user/login',
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
