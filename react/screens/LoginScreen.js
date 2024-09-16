@@ -50,6 +50,14 @@ export default function LoginScreen({ navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+
+      {/* Botón para redirigir a la pantalla de registro */}
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={() => navigation.navigate('Register')}
+      >
+        <Text style={styles.registerText}>Si no tienes cuenta, regístrate</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -93,5 +101,14 @@ const styles = StyleSheet.create({
     color: '#fff', // Color de texto del botón
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  registerButton: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  registerText: {
+    color: '#007bff',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
