@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
-import { register } from '../../utils/api';
+import { register } from '../../utils/api.js';
 
 
 const RegisterScreen = ({ navigation }) => {
@@ -12,18 +12,29 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-        // const response = await axios.post('https://famous-abnormally-calf.ngrok-free.app/api/register', {
-        //     'first_name': nombre,
-        //     'last_name':apellido,
-        //     'username':username,
-        //     'password':password
-        //   });
-        const response = await register(nombre, apellido, username, password);
+        /*
+         const response = await axios.post('https://famous-abnormally-calf.ngrok-free.app/api/user/register', {
+              'first_name': "Ronitossssoo",
+              'last_name': "Chmielevsky",
+              'username': "roni@gmail.com",
+              'password': "ronchm124"
+          });
+        */
 
-      if (response.data.success) {
+          /*
+            const response = await axios.post('https://famous-abnormally-calf.ngrok-free.app/api/user/register', {
+                'first_name': nombre,
+                'last_name':apellido,
+                'username':username,
+                'password':password
+              });
+          */
+         const response = await register(nombre, apellido, username, password);
+
+      if (response.success) {
         Alert.alert('Registro Exitoso', 'Te has registrado correctamente.');
         // Aquí redirigimos al login
-        navigation.navigate('Login');
+        navigation.navigate('Events');
       } else {
         Alert.alert('Error', 'No se pudo registrar el usuario.');
       }

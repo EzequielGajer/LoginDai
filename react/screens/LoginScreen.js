@@ -15,6 +15,8 @@ export default function LoginScreen({ navigation }) {
   
       if (response.success) {
         alert('Login completado');
+        navigation.navigate('Events');
+
       } else {
         // Manejar otros casos de error
         const errorMessage = response.message || 'Error desconocido'; 
