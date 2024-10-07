@@ -29,7 +29,6 @@ export default function LoginScreen({ navigation }) {
     }
   };
   
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>

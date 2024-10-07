@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { getEventos } from "../../utils/api";
- // Importa la función de la API
 
 const EventsScreen = () => {
   const [eventos, setEventos] = useState([]);
@@ -10,11 +9,11 @@ const EventsScreen = () => {
   const navigation = useNavigation();
 
   const fetchEventos = async () => {
-    console.log("Buscando eventos")
     try {
-      const data = await getEventos(); // Llama a la función getEventos desde api.js
-      console.log("Datos recibidos:", data.events.length); // Para depuración
-      setEventos(data.events); // Asumimos que los eventos están en data.events
+      const data = await getEventos();
+      const uniqueEventos = Array.from(new Set(data.events.map(e => e.id))) // Elimina duplicados
+        .map(id => data.events.find(e => e.id === id));
+      setEventos(uniqueEventos); // Almacena los eventos únicos
       setLoading(false);
     } catch (error) {
       console.error("Error al obtener los eventos:", error);
@@ -27,25 +26,30 @@ const EventsScreen = () => {
   }, []);
 
   const renderEventItem = (item) => (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.eventContainer}
-      onPress={() =>
-        navigation.navigate("DetalleEventosScreen", { eventId: item.id })
-      }
-    >
-      <Text style={styles.eventName}>{item.name}</Text>
-      <Text style={styles.eventDescription}>{item.description}</Text>
-      <Text style={styles.eventDetails}>
-        Fecha: {new Date(item.start_date).toLocaleDateString()}
-      </Text>
-    </TouchableOpacity>
+    <View key={item.id} style={styles.card}>
+      <View style={styles.cardContent}>
+        <Text style={styles.eventName}>{item.name}</Text>
+        <Text style={styles.eventDescription} numberOfLines={2}>
+          {item.description}
+        </Text>
+        <Text style={styles.eventDetails}>
+          Fecha: {new Date(item.start_date).toLocaleDateString()}
+        </Text>
+        <TouchableOpacity
+          style={styles.moreButton}
+          onPress={() => navigation.navigate("DetalleEvents", { eventId: item.id })}
+        >
+          <Text style={styles.moreButtonText}>Ver más</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
+  
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#007bff" />
       </View>
     );
   }
@@ -64,57 +68,77 @@ const EventsScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 16,
-      backgroundColor: '#f0f0f0', // Fondo gris claro
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 24,
-      textAlign: 'center',
-      color: '#333', // Color de texto
-    },
-    input: {
-      height: 45,
-      borderColor: '#ddd',
-      borderWidth: 1,
-      borderRadius: 8,
-      marginBottom: 16,
-      paddingHorizontal: 12,
-      backgroundColor: '#fff', // Fondo blanco para los campos de entrada
-    },
-    errorText: {
-      color: 'red',
-      marginBottom: 16,
-      textAlign: 'center',
-    },
-    button: {
-      backgroundColor: '#007bff', // Color de fondo del botón
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    buttonText: {
-      color: '#fff', // Color de texto del botón
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    registerButton: {
-      marginTop: 20,
-      alignItems: 'center',
-    },
-    registerText: {
-      color: '#007bff',
-      fontSize: 14,
-      textDecorationLine: 'underline',
-    },
-  });
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#444',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    padding: 20,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  cardContent: {
+    alignItems: 'center',
+  },
+  eventName: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#007bff',
+    marginBottom: 10,
+  },
+  eventDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  eventDetails: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 20,
+  },
+  moreButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  moreButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  listContainer: {
+    paddingBottom: 30,
+  },
+  noEventsText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 16,
+    marginTop: 20,
+  },
+});
 
-  
 export default EventsScreen;
