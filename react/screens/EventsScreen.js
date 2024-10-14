@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { getEventos } from "../../utils/api";
+import { NavigationContainer } from '@react-navigation/native'; // Navigation container para envolver la navegación
+import { createStackNavigator } from '@react-navigation/stack'; // Stack navigator
 
 const EventsScreen = () => {
   const [eventos, setEventos] = useState([]);
@@ -65,6 +67,7 @@ const EventsScreen = () => {
         )}
       </ScrollView>
     </View>
+    
   );
 };
 

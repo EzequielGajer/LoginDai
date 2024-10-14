@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, FlatList, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
+import { NavigationContainer } from '@react-navigation/native'; // Navigation container para envolver la navegación
+import { createStackNavigator } from '@react-navigation/stack'; // Stack navigator
 
 const DetalleEventsScreen = ({ route, navigation }) => {
   const [event, setEvent] = useState(null);
@@ -128,10 +130,14 @@ const DetalleEventsScreen = ({ route, navigation }) => {
           <Ionicons name="calendar-outline" size={24} color="#4c669f" />
           <Text style={styles.tabText}>Eventos</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('CategoriasScreen')}>
-          <Ionicons name="search-outline" size={24} color="#4c669f" />
-          <Text style={styles.tabText}>Categorías</Text>
+        <TouchableOpacity 
+                style={styles.tabItem} 
+                onPress={() => navigation.navigate('CategoriasScreen')}  // Asegúrate que el nombre coincide con App.js
+              >
+                <Ionicons name="search-outline" size={24} color="#4c669f" />
+                <Text style={styles.tabText}>Categorías</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('ProfileScreen')}>
           <Ionicons name="person-outline" size={24} color="#4c669f" />
           <Text style={styles.tabText}>Perfil</Text>
