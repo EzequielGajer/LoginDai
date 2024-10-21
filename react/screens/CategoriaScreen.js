@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack'; // Stack navigat
 // Datos de categorías
 const categorias = [
   { id: '1', nombre: 'Deportivos' },
+  { id: '1', nombre: 'Deportivos' },
   { id: '2', nombre: 'Educativos' },
   { id: '3', nombre: 'Empresariales' },
   { id: '4', nombre: 'Gastronómicos' },
