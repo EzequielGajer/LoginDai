@@ -104,6 +104,7 @@ const DetalleEventsScreen = ({ route, navigation }) => {
                 {event.subscribed ? 'DESUSCRIBIRSE' : 'SUSCRIBIRSE'}
               </Text>
             </TouchableOpacity>
+            
           </View>
         ) : (
           <View style={styles.attendeesContainer}>
@@ -123,28 +124,29 @@ const DetalleEventsScreen = ({ route, navigation }) => {
               )}
             />
           </View>
+          
         )}
       </View>
       <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('EventosScreen')}>
+        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('Events')}>
           <Ionicons name="calendar-outline" size={24} color="#4c669f" />
           <Text style={styles.tabText}>Eventos</Text>
         </TouchableOpacity>
         <TouchableOpacity 
                 style={styles.tabItem} 
-                onPress={() => navigation.navigate('CategoriasScreen')}  // Asegúrate que el nombre coincide con App.js
+                onPress={() => navigation.navigate('CategoriaScreen')}  // Asegúrate que el nombre coincide con App.js
               >
                 <Ionicons name="search-outline" size={24} color="#4c669f" />
                 <Text style={styles.tabText}>Categorías</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('ProfileScreen')}>
+        {/* <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('ProfileScreen')}>
           <Ionicons name="person-outline" size={24} color="#4c669f" />
           <Text style={styles.tabText}>Perfil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('LoginScreen')}>
+        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.tabItem} onPress={() => navigation.navigate('Login')}>
           <Ionicons name="menu-outline" size={24} color="#4c669f" />
-          <Text style={styles.tabText}>Menú</Text>
+          <Text style={styles.tabText}>Login</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

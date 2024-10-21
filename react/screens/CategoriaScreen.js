@@ -16,7 +16,7 @@ const categorias = [
   { id: '8', nombre: 'Sociales' }
 ];
 
-const CategoriasScreen = () => {
+const CategoriaScreen = () => {
   const navigation = useNavigation();
 
   const handlePress = (categoria) => {
@@ -38,6 +38,7 @@ const CategoriasScreen = () => {
         keyExtractor={(item) => item.id}
       />
     </View>
+    
   );
 };
 
@@ -65,4 +66,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CategoriasScreen;
+export default CategoriaScreen;
