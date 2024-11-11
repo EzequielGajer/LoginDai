@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, FlatList, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native'; // Navigation container para envolver la navegación
 import { createStackNavigator } from '@react-navigation/stack'; // Stack navigator
 
@@ -9,7 +10,7 @@ const DetalleEventsScreen = ({ route, navigation }) => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAction, setLoadingAction] = useState(false);
-  const baseUrl = "https://famous-abnormally-calf.ngrok-free.app"; // Asegúrate de incluir https://
+  const baseUrl = "https://famous-abnormally-calf.ngrok-free.app"; 
   const { eventId } = route.params;
 
   useEffect(() => {
@@ -18,7 +19,11 @@ const DetalleEventsScreen = ({ route, navigation }) => {
 
   const fetchEventDetails = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/event/${eventId}`);
+      let url = `${baseUrl}/api/event/${eventId}`;
+      // console.log('url', url);
+      // console.log('eventId', eventId);
+      const response = await axios.get(url);
+      console.log('datos', response.data);
       setEvent(response.data);
       setLoading(false);
     } catch (error) {
@@ -32,48 +37,96 @@ const DetalleEventsScreen = ({ route, navigation }) => {
     Alert.alert(title, message, [{ text: 'OK', onPress: () => console.log('OK Pressed') }], { cancelable: false });
   };
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (eventId, showAlert) => {
     setLoadingAction(true);
     try {
-      await axios.post(`${baseUrl}/api/event/${eventId}/enrollment/attended`);
-      showAlert(event.name, 'Suscripción exitosa!');
-    } catch (error) {
-      console.error("Error al suscribirse:", error);
-      showAlert("Error", "No se pudo realizar la suscripción");
-    } finally {
-      setLoadingAction(false);
-    }
-  };
+        const token = await AsyncStorage.getItem('authToken');
+        if (!token) {
+            showAlert("Error", "No estás autenticado. Por favor, inicia sesión.");
+            return;
+        }
 
-  const handleUnsubscribe = async () => {
-    setLoadingAction(true);
-    try {
-      await axios.delete(`${baseUrl}/api/event/${eventId}/enrollment/attended`);
-      showAlert(event.name, 'Te has desuscrito del evento.');
+        // Realiza la solicitud de suscripción y verifica solo el estado
+        const response = await axios.post(`${baseUrl}/api/event/${eventId}/enrollment`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 201) {
+            showAlert("Suscripción exitosa", "¡Te has suscrito al evento con éxito!");
+        } else {
+            showAlert("Error", "Hubo un problema al suscribirse. Inténtalo nuevamente.");
+        }
     } catch (error) {
-      console.error("Error al desuscribirse:", error);
-      showAlert("Error", "No se pudo realizar la desuscripción");
+        console.error("Error al suscribirse:", error);
+        showAlert("Error", "No se pudo realizar la suscripción");
     } finally {
-      setLoadingAction(false);
+        setLoadingAction(false);
     }
-  };
+};
+
+
+//   const handleUnsubscribe = async (eventId, showAlert) => {
+//     setLoadingAction(true);
+//     try {
+//         // Realiza la solicitud de desuscripción sin token en las cabeceras
+//         await axios.delete(`${baseUrl}/api/event/${eventId}/enrollment`);
+
+//         showAlert("Desuscripción exitosa", 'Te has desuscrito del evento.');
+//     } catch (error) {
+//         console.error("Error al desuscribirse:", error);
+//         showAlert("Error", "No se pudo realizar la desuscripción");
+//     } finally {
+//         setLoadingAction(false);
+//     }
+// };
+
+  
+  
+
+
+  // const handleSubscribe = async () => {
+  //   setLoadingAction(true);
+  //   try {
+  //     await axios.post(`${baseUrl}/api/event/${eventId}/enrollment`);
+  //     showAlert(event.name, 'Suscripción exitosa!');
+  //   } catch (error) {
+  //     console.error("Error al suscribirse:", error);
+  //     showAlert("Error", "No se pudo realizar la suscripción");
+  //   } finally {
+  //     setLoadingAction(false);
+  //   }
+  // };
+
+  // const handleUnsubscribe = async () => {
+  //   setLoadingAction(true);
+  //   try {
+  //     await axios.delete(`${baseUrl}/api/event/${eventId}/enrollment/attended`);
+  //     showAlert(event.name, 'Te has desuscrito del evento.');
+  //   } catch (error) {
+  //     console.error("Error al desuscribirse:", error);
+  //     showAlert("Error", "No se pudo realizar la desuscripción");
+  //   } finally {
+  //     setLoadingAction(false);
+  //   }
+  // };
+  
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4A90E2" />
+      <ActivityIndicator size="large" color="#4A90E2" />
       </View>
     );
-  }
-
-  if (!event) {
+    }
+    
+    if (!event) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Error al cargar los detalles del evento</Text>
+      <Text style={styles.errorText}>Error al cargar los detalles del evento</Text>
       </View>
     );
-  }
-
+    }
+  
   const isFutureEvent = new Date(event.start_date) > new Date();
 
   return (

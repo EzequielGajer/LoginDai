@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { login } from '../../utils/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
+const baseUrl = 'https://famous-abnormally-calf.ngrok-free.app';
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('pablo.ulman@ort.edu.ar');
@@ -10,16 +13,16 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       console.log('Attempting to log in with:', { username, password });
-      const response = await login(username, password);
-      console.log('Login response:', response);
+      const response = await axios.post(`${baseUrl}/api/user/login`, { username, password });
+      console.log('Login response:', response.data);
   
-      if (response.success) {
+      if (response.data.success) {
+        const token = response.data.token;
+        await AsyncStorage.setItem('authToken', token); // Guarda el token
         alert('Login completado');
         navigation.navigate('Events');
-
       } else {
-        // Manejar otros casos de error
-        const errorMessage = response.message || 'Error desconocido'; 
+        const errorMessage = response.data.message || 'Error desconocido';
         setError(errorMessage);
         console.log('Error message from response:', errorMessage);
       }
@@ -28,7 +31,7 @@ export default function LoginScreen({ navigation }) {
       console.log('Error caught in catch block:', err);
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
@@ -68,14 +71,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
-    backgroundColor: '#f0f0f0', // Fondo gris claro
+    backgroundColor: '#f0f0f0',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 24,
     textAlign: 'center',
-    color: '#333', // Color de texto
+    color: '#333',
   },
   input: {
     height: 45,
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     paddingHorizontal: 12,
-    backgroundColor: '#fff', // Fondo blanco para los campos de entrada
+    backgroundColor: '#fff',
   },
   errorText: {
     color: 'red',
@@ -92,14 +95,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#007bff', // Color de fondo del botón
+    backgroundColor: '#007bff',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#fff', // Color de texto del botón
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -297,4 +297,4 @@ const styles = StyleSheet.create({
 //   },
 // });
 
-// export default EventsScreen;
+export default EventsScreen;
