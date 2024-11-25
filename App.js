@@ -53,6 +53,7 @@ export default function App() {
         <Stack.Screen name="Events" component={EventsScreen} />
         <Stack.Screen name="DetalleEvents" component={DetalleEventsScreen} />
         <Stack.Screen name="CategoriaScreen" component={CategoriaScreen} />
+        {/* <Stack.Screen name="EventsCategoryScreen" component={EventsCategoryScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
